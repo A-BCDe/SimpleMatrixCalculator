@@ -5,3 +5,10 @@ D:\Visual Studio 2017 Projects\Simple Matrix Calculator\Simple Matrix Calculator
 D:\Visual Studio 2017 Projects\Simple Matrix Calculator\Simple Matrix Calculator\obj\Debug\Simple Matrix Calculator.exe
 D:\Visual Studio 2017 Projects\Simple Matrix Calculator\Simple Matrix Calculator\obj\Debug\Simple Matrix Calculator.pdb
 D:\Visual Studio 2017 Projects\Simple Matrix Calculator\Simple Matrix Calculator\bin\Debug\OpenCL.Net.dll
+D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\bin\Debug\Simple Matrix Calculator.exe.config
+D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\bin\Debug\Simple Matrix Calculator.exe
+D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\bin\Debug\Simple Matrix Calculator.pdb
+D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\bin\Debug\OpenCL.Net.dll
+D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\obj\Debug\Simple Matrix Calculator.csprojResolveAssemblyReference.cache
+D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\obj\Debug\Simple Matrix Calculator.exe
+D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\obj\Debug\Simple Matrix Calculator.pdb

@@ -18,6 +18,7 @@ namespace Simple_Matrix_Calculator
             
             stopwatch.Reset();
             stopwatch.Start();
+            foo(A);
             Console.WriteLine(A.Det);
             Console.WriteLine(A.Tr);
             foo(A.Inverse);
