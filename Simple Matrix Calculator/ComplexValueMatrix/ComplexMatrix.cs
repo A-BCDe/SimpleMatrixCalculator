@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Simple_Matrix_Calculator.Number;
+using Simple_Matrix_Calculator.RealMatrix;
+using System.Runtime.CompilerServices;
 
-namespace Simple_Matrix_Calculator.RealMatrix
+namespace Simple_Matrix_Calculator.ComplexValueMatrix
 {
-    public class Matrix
+    class ComplexMatrix
     {
         public readonly int Row;
         public readonly int Col;
-        protected double[,] mat;
+        protected Complex[,] mat;
         private bool _lock;
         public bool Lock
         {
@@ -32,59 +33,59 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         } // choose whether the matrix is changable or not
 
-        private double det;
+        private Complex det;
         private bool detMade;
-        private double tr;
+        private Complex tr;
         private bool trMade;
 
-        private Matrix L;
-        private Matrix U;
+        private ComplexMatrix L;
+        private ComplexMatrix U;
         private bool LUMade;
-        private Matrix P;
+        private ComplexMatrix P;
         private bool PMade;
 
-        private Matrix T;
+        private ComplexMatrix T;
         private bool TMade;
-        private Matrix I;
+        private ComplexMatrix I;
         private bool IMade;
 
-        
+
 
         private int[] permutation;
         private int permutationDeterminant = 1;
 
-        public Matrix(int row, int col)
+        public ComplexMatrix(int row, int col)
         {
             Row = row;
             Col = col;
-            mat = new double[row, col];
+            mat = new Complex[row, col];
             Lock = false;
         }
-        public Matrix(double[,] matrix)
+        public ComplexMatrix(Complex[,] matrix)
         {
             mat = matrix;
             Row = mat.GetLength(0);
             Col = mat.GetLength(1);
             Lock = true;
         }
-        public Matrix(int row, int col, SpecialMatrix specialMatrix)
+        public ComplexMatrix(int row, int col, ComplexSpecialMatrix specialMatrix)
         {
             Row = row;
             Col = col;
-            mat = new double[row, col];
+            mat = new Complex[row, col];
             switch (specialMatrix)
             {
-                case SpecialMatrix.Zero:
-                    for(int i = 0; i < row; i++)
+                case ComplexSpecialMatrix.Zero:
+                    for (int i = 0; i < row; i++)
                     {
-                        for(int j = 0; j < col; j++)
+                        for (int j = 0; j < col; j++)
                         {
                             mat[i, j] = 0;
                         }
                     }
                     break;
 
-                case SpecialMatrix.One:
+                case ComplexSpecialMatrix.One:
                     for (int i = 0; i < row; i++)
                     {
                         for (int j = 0; j < col; j++)
@@ -94,7 +95,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                     }
                     break;
 
-                case SpecialMatrix.Identity:
+                case ComplexSpecialMatrix.Identity:
                     if (row != col)
                     {
                         throw NotSquareException;
@@ -115,13 +116,13 @@ namespace Simple_Matrix_Calculator.RealMatrix
                     }
                     break;
 
-                case SpecialMatrix.Random:
+                case ComplexSpecialMatrix.Random:
                     Random rand = new Random((int)DateTime.Now.Ticks);
-                    for(int i = 0; i < row; i++)
+                    for (int i = 0; i < row; i++)
                     {
-                        for(int j = 0; j < col; j++)
+                        for (int j = 0; j < col; j++)
                         {
-                            mat[i, j] = rand.NextDouble();
+                            mat[i, j] = new Complex(rand.NextDouble(), rand.NextDouble());
                         }
                     }
                     break;
@@ -132,15 +133,15 @@ namespace Simple_Matrix_Calculator.RealMatrix
             Lock = true;
         }
 
-        public Matrix Transpose
+        public ComplexMatrix Transpose
         {
             get
             {
-                if(Lock == true && TMade == true)
+                if (Lock == true && TMade == true)
                 {
                     return T;
                 }
-                T = new Matrix(Col, Row);
+                T = new ComplexMatrix(Col, Row);
                 for (int i = 0; i < Row; i++)
                 {
                     for (int j = 0; j < Col; j++)
@@ -160,7 +161,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             {
                 // Do not run this if LU is made!
 
-                L = new Matrix(Row, Col, SpecialMatrix.Identity);
+                L = new ComplexMatrix(Row, Col, ComplexSpecialMatrix.Identity);
                 U = mat;
                 L.Lock = false;
                 U.Lock = false;
@@ -203,18 +204,18 @@ namespace Simple_Matrix_Calculator.RealMatrix
 
                     for (int j = 0; j < i; j++)
                     {
-                        tmp = L[i, j];
+                        Complex tmp1 = L[i, j];
                         L[i, j] = L[selectedCol, j];
-                        L[selectedCol, j] = tmp;
+                        L[selectedCol, j] = tmp1;
                     }
 
                     if (i != selectedCol) permutationDeterminant *= -1;
 
                     for (int j = 0; j < Col; j++)
                     {
-                        tmp = U[i, j];
+                        Complex tmp1 = U[i, j];
                         U[i, j] = U[selectedCol, j];
-                        U[selectedCol, j] = tmp;
+                        U[selectedCol, j] = tmp1;
                     }
 
                     for (int j = i + 1; j < Row; j++)
@@ -236,15 +237,15 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
 
-        public Matrix PermutationMatrix
+        public ComplexMatrix PermutationMatrix
         {
             get
             {
-                if(Lock == true && PMade == true)
+                if (Lock == true && PMade == true)
                 {
                     return P;
                 }
-                P = new Matrix(Row, Col, SpecialMatrix.Zero);
+                P = new ComplexMatrix(Row, Col, ComplexSpecialMatrix.Zero);
                 for (int i = 0; i < Row; i++)
                 {
                     P[permutation[i], i] = 1;
@@ -255,25 +256,25 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
 
-        public Matrix Inverse
+        public ComplexMatrix Inverse
         {
             get
             {
-                if(Lock == true && IMade == true)
+                if (Lock == true && IMade == true)
                 {
                     return I;
                 }
-                if(!LUMade)
+                if (!LUMade)
                 {
                     MakeLU();
                 }
-                I = new Matrix(Row, Col);
+                I = new ComplexMatrix(Row, Col);
 
                 Parallel.For(0, Row, i =>
                 {
-                     RowVector rowVector = new RowVector(Row);
-                     rowVector[i] = 1;
-                     I.SetCol(SolveWith(rowVector), i);
+                    ComplexRowVector rowVector = new ComplexRowVector(Row);
+                    rowVector[i] = 1;
+                    I.SetCol(SolveWith(rowVector), i);
                 });
                 IMade = true;
                 I.Lock = true;
@@ -281,15 +282,15 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
 
-        public double Det
+        public Complex Det
         {
             get
             {
-                if(Lock == true && detMade == true)
+                if (Lock == true && detMade == true)
                 {
                     return det;
                 }
-                if(!LUMade)
+                if (!LUMade)
                 {
                     MakeLU();
                 }
@@ -302,18 +303,18 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 return det;
             }
         }
-        public double Tr
+        public Complex Tr
         {
             get
             {
-                if(Lock == true && trMade == true)
+                if (Lock == true && trMade == true)
                 {
                     return tr;
                 }
                 if (IsSquare())
                 {
                     tr = 0;
-                    for(int i = 0; i < Row; i++)
+                    for (int i = 0; i < Row; i++)
                     {
                         tr += mat[i, i];
                     }
@@ -326,22 +327,22 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 }
             }
         }
-        public Matrix LMatrix
+        public ComplexMatrix LMatrix
         {
             get
             {
-                if(Lock == true && LUMade == true)
+                if (Lock == true && LUMade == true)
                 {
                     return L;
                 }
-                if(!LUMade)
+                if (!LUMade)
                 {
                     MakeLU();
                 }
                 return L;
             }
         }
-        public Matrix UMatrix
+        public ComplexMatrix UMatrix
         {
             get
             {
@@ -361,15 +362,15 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             return (Row == Col);
         }
-        public static bool IsSquare(Matrix A)
+        public static bool IsSquare(ComplexMatrix A)
         {
             return (A.Row == A.Col);
         }
-        public static bool IsSameSize(Matrix A, Matrix B)
+        public static bool IsSameSize(ComplexMatrix A, ComplexMatrix B)
         {
             return ((A.Row == B.Row) && (A.Col == B.Col));
         }
-        public static bool IsMultipliable(Matrix A, Matrix B)
+        public static bool IsMultipliable(ComplexMatrix A, ComplexMatrix B)
         {
             return (A.Col == B.Row);
         }
@@ -381,14 +382,14 @@ namespace Simple_Matrix_Calculator.RealMatrix
             {
                 for (int j = 0; j < Col; j++)
                 {
-                    s += String.Format("{0,5:0.0000}", mat[i, j]) + " ";
+                    s += String.Format("{0}", mat[i, j]) + " ";
                 }
                 s += "\r\n";
             }
             return s;
         }
 
-        public double this[int row, int col]
+        public Complex this[int row, int col]
         {
             get
             {
@@ -396,7 +397,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
             set
             {
-                if(Lock)
+                if (Lock)
                 {
                     throw new Exception("Cannot change locked matrix!");
                 }
@@ -406,44 +407,62 @@ namespace Simple_Matrix_Calculator.RealMatrix
 
         #region Operator
 
-        public static implicit operator Matrix(double[,] matrix)
+        public static implicit operator ComplexMatrix(Matrix matrix)
         {
-            return new Matrix((double[,])matrix.Clone());
+            ComplexMatrix A = new ComplexMatrix(matrix.Row, matrix.Col);
+            A.Lock = false;
+            for (int i = 0; i < matrix.Row; i++)
+            {
+                for(int j = 0; j < matrix.Col; j++)
+                {
+                    A[i, j] = matrix[i, j];
+                }
+            }
+            A.Lock = true;
+            return A;
         }
-        public static implicit operator double[,](Matrix matrix)
+        public static implicit operator ComplexMatrix(Complex[,] complexMatrix)
         {
-            return (double[,])matrix.mat.Clone();
+            return new ComplexMatrix((Complex[,])complexMatrix.Clone());
         }
-        public static Matrix operator + (Matrix A, Matrix B)
+        public static implicit operator Complex[,] (ComplexMatrix complexMatrix)
+        {
+            return (Complex[,])complexMatrix.mat.Clone();
+        }
+        public static ComplexMatrix operator +(ComplexMatrix A, ComplexMatrix B)
         {
             return Add(A, B);
         }
-        public static Matrix operator - (Matrix A, Matrix B)
+        public static ComplexMatrix operator -(ComplexMatrix A, ComplexMatrix B)
         {
             return Subtract(A, B);
         }
-        public static Matrix operator * (Matrix A, Matrix B)
+        public static ComplexMatrix operator *(ComplexMatrix A, ComplexMatrix B)
         {
             return SimpleMultiply(A, B);
         }
-        public static Matrix operator * (double a, Matrix B)
+        public static ComplexMatrix operator *(Complex a, ComplexMatrix B)
         {
             return Multiply(a, B);
         }
-        public static Matrix operator * (Matrix A, double b)
+        public static ComplexMatrix operator *(ComplexMatrix A, Complex b)
         {
             return Multiply(b, A);
         }
-        public static Matrix operator / (Matrix A, double b)
+        public static ComplexMatrix operator /(ComplexMatrix A, Complex b)
         {
             return Divide(b, A);
         }
-        public static Matrix operator - (Matrix A)
+        public static ComplexMatrix operator -(ComplexMatrix A)
         {
             return Negative(A);
         }
+        public static ComplexMatrix operator ~(ComplexMatrix A) // Conjugate Transpose
+        {
+            return ConjugateTranspose(A);
+        }
 
-#endregion
+        #endregion
 
         #region Exceptions
 
@@ -461,13 +480,13 @@ namespace Simple_Matrix_Calculator.RealMatrix
         #region inline functions
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private double Abs(double a)
+        private double Abs(Complex a)
         {
-            return a > 0 ? a : -a;
+            return a.Re * a.Re + a.Im * a.Im;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetCol(RowVector v, int k)
+        private void SetCol(ComplexRowVector v, int k)
         {
             for (int i = 0; i < Row; i++)
             {
@@ -476,10 +495,10 @@ namespace Simple_Matrix_Calculator.RealMatrix
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static RowVector SolveForth(Matrix A, RowVector b)
+        private static ComplexRowVector SolveForth(ComplexMatrix A, ComplexRowVector b)
         {
             int row = A.Row;
-            RowVector B = new RowVector(row);
+            ComplexRowVector B = new ComplexRowVector(row);
 
             for (int i = 0; i < row; i++)
             {
@@ -493,10 +512,10 @@ namespace Simple_Matrix_Calculator.RealMatrix
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static RowVector SolveBack(Matrix A, RowVector b)
+        private static ComplexRowVector SolveBack(ComplexMatrix A, ComplexRowVector b)
         {
             int row = A.Row;
-            RowVector B = new RowVector(row);
+            ComplexRowVector B = new ComplexRowVector(row);
 
             for (int i = row - 1; i > -1; i--)
             {
@@ -510,7 +529,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RowVector SolveWith(RowVector v)
+        public ComplexRowVector SolveWith(ComplexRowVector v)
         {
             if (Row != Col)
             {
@@ -521,7 +540,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 throw new Exception("Wrong number of results in solution vector!");
             }
 
-            RowVector b = new RowVector(Row);
+            ComplexRowVector b = new ComplexRowVector(Row);
             for (int i = 0; i < Row; i++)
             {
                 b[i] = v[permutation[i]];
@@ -531,11 +550,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Matrix Add(Matrix A, Matrix B)
+        private static ComplexMatrix Add(ComplexMatrix A, ComplexMatrix B)
         {
             if (IsSameSize(A, B))
             {
-                Matrix C = new Matrix(A.Row, A.Col);
+                ComplexMatrix C = new ComplexMatrix(A.Row, A.Col);
                 for (int i = 0; i < A.Row; i++)
                 {
                     for (int j = 0; j < B.Row; j++)
@@ -551,11 +570,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Matrix Subtract(Matrix A, Matrix B)
+        private static ComplexMatrix Subtract(ComplexMatrix A, ComplexMatrix B)
         {
             if (IsSameSize(A, B))
             {
-                Matrix C = new Matrix(A.Row, A.Col);
+                ComplexMatrix C = new ComplexMatrix(A.Row, A.Col);
                 for (int i = 0; i < A.Row; i++)
                 {
                     for (int j = 0; j < B.Row; j++)
@@ -571,11 +590,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Matrix SimpleMultiply(Matrix A, Matrix B)
+        private static ComplexMatrix SimpleMultiply(ComplexMatrix A, ComplexMatrix B)
         {
             if (IsMultipliable(A, B))
             {
-                Matrix C = new Matrix(A.Row, B.Col, SpecialMatrix.Zero);
+                ComplexMatrix C = new ComplexMatrix(A.Row, B.Col, ComplexSpecialMatrix.Zero);
                 C.Lock = false;
                 /*
                 for(int i = 0; i < A.Row; i++)
@@ -609,7 +628,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Matrix Multiply(double a, Matrix B)
+        private static ComplexMatrix Multiply(Complex a, ComplexMatrix B)
         {
             Parallel.For(0, B.Row, i =>
             {
@@ -621,34 +640,47 @@ namespace Simple_Matrix_Calculator.RealMatrix
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Matrix Divide(double a, Matrix B)
+        private static ComplexMatrix Divide(Complex a, ComplexMatrix B)
         {
             Parallel.For(0, B.Row, i =>
-              {
-                  for (int j = 0; j < B.Col; j++)
-                  {
-                      B[i, j] /= a;
-                  }
-              });
-            return B;
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Matrix Negative(Matrix A)
-        {
-            Matrix B = A;
-            Parallel.For(0, A.Row, i =>
             {
-                for (int j = 0; j < A.Col; j++)
+                for (int j = 0; j < B.Col; j++)
                 {
-                    B[i, j] = -A[i, j];
+                    B[i, j] /= a;
                 }
             });
             return B;
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static ComplexMatrix Negative(ComplexMatrix A)
+        {
+            Parallel.For(0, A.Row, i =>
+            {
+                for (int j = 0; j < A.Col; j++)
+                {
+                    A[i, j] = -A[i, j];
+                }
+            });
+            return A;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static ComplexMatrix ConjugateTranspose(ComplexMatrix A)
+        {
+            ComplexMatrix B = new ComplexMatrix(A.Col, A.Row);
+            Parallel.For(0, A.Row, i =>
+            {
+                for (int j = 0; j < A.Col; j++)
+                {
+                    B[j, i] = A[i, j];
+                }
+            });
+            B.Lock = true;
+            return B;
+        }
     }
     #endregion
-    
-    public enum SpecialMatrix
+
+    public enum ComplexSpecialMatrix
     {
         Zero, One, Identity, Random
     }

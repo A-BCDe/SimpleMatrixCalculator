@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenCL.Net, Version=2.2.9.0, Culture=neutral, processorArchitecture=MSIL">
@@ -47,7 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComplexMatrix\ComplexMatrix.cs" />
+    <Compile Include="ComplexValueMatrix\ComplexColumnVector.cs" />
+    <Compile Include="ComplexValueMatrix\ComplexMatrix.cs" />
+    <Compile Include="ComplexValueMatrix\ComplexRowVector.cs" />
+    <Compile Include="Number\Complex.cs" />
     <Compile Include="RealMatrix\CoefficientMatrix.cs" />
     <Compile Include="RealMatrix\CoulmnVector.cs" />
     <Compile Include="RealMatrix\Matrices.cs" />
