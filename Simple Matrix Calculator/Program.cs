@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,47 +14,82 @@ namespace Simple_Matrix_Calculator
     {
         static void Main(string[] args)
         {
-            ComplexMatrix A = new ComplexMatrix(3, 3, ComplexSpecialMatrix.Random);
-            // Matrix B = new Matrix(700, 700, SpecialMatrix.Random);
-            Stopwatch stopwatch = new Stopwatch();
-            
-            stopwatch.Reset();
-            stopwatch.Start();
-            Console.WriteLine(A.LMatrix);
-            Console.WriteLine(A.UMatrix);
+            ///
+            /// Example : Gradient Descent
+            ///
+            List<RowVector> samples;
+            RowVector correspondingValues;
+            CoefficientMatrix samplesMatrix;
+            int n, m;
+            string FileName = "test.txt";
+            if (File.Exists(FileName))
+            {
+                ///
+                /// File Name : test.txt
+                /// n m
+                /// x11 x12 ... x1m y1
+                /// x21 x22 ... x2m y2
+                /// ..................
+                /// xn1 xn2 ... xnm yn
+                ///
+                using (StreamReader sr = new StreamReader(FileName))
+                {
+                    string str = Console.ReadLine();
+                    string[] split = str.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    n = int.Parse(split[0]);
+                    m = int.Parse(split[1]);
+                    samples = new List<RowVector>();
+                    correspondingValues = new RowVector(n);
+                    for (int i = 0; i < n; i++)
+                    {
+                        str = Console.ReadLine();
+                        split = str.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                        RowVector sample = new RowVector(m);
+                        for(int j = 0; j < m; j++)
+                        {
+                            sample[j] = int.Parse(split[j]);
+                        }
+                        samples.Add(sample);
+                        correspondingValues[i] = int.Parse(split[m - 1]);
+                    }
+                }
+            }
+            else
+            {
+                n = 100;
+                m = 99;
+                samples = new List<RowVector>(n);
+                correspondingValues = new RowVector(n, SpecialMatrix.Random);
 
+                for (int i = 0; i < n; i++)
+                {
+                    samples.Add(new RowVector(m, SpecialMatrix.Random));
+                    /*
+                    samples[i][0] = 1;
+                    samples[i][1] = i & 1431655765;
+                    samples[i][2] = i / 2;
+                    */
+                }
+            }
+            samplesMatrix = new CoefficientMatrix(samples, true);
 
-            // Console.WriteLine(A.Inverse);
-            stopwatch.Stop();
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
-
-            stopwatch.Reset();
-            stopwatch.Start();
             /*
-            Console.WriteLine(A.Tr);
-            stopwatch.Stop();
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
-
-            stopwatch.Reset();
-            stopwatch.Start();
-            Console.WriteLine(A.Det);
-            stopwatch.Stop();
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
-
-            //foo(A.Inverse);
-
-            stopwatch.Reset();
-            stopwatch.Start();
-            Console.WriteLine(A.Inverse.Det);
-            stopwatch.Stop();
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
-
-            // foo(A);
+            foo(samplesMatrix);
+            foo(null);
+            foo(samplesMatrix.Transpose);
+            foo(null);
+            foo((samplesMatrix.Transpose * samplesMatrix));
+            foo(null);
+            foo((samplesMatrix.Transpose * samplesMatrix).Inverse);
+            foo(null);
+            foo((samplesMatrix.Transpose * samplesMatrix).Inverse * samplesMatrix.Transpose);
             */
+            RowVector result = ((samplesMatrix.Transpose * samplesMatrix).Inverse * samplesMatrix.Transpose * correspondingValues).ToRowVector();
+            Console.WriteLine(result);
         }
         private static void foo(Matrix A)
         {
-            // Console.WriteLine(A);
+            Console.WriteLine(A);
             return;
         }
     }

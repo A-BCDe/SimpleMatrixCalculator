@@ -153,7 +153,27 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 return T;
             }
         }
+        /*
+        public void MakeLUSimple()
+        {
+            if (IsSquare())
+            {
+                L = new Matrix(Row, Col, SpecialMatrix.Identity);
+                U = mat;
+                L.Lock = false;
+                U.Lock = false;
 
+                permutation = new int[Row];
+                for (int i = 0; i < Row; i++)
+                {
+                    permutation[i] = i;
+                }
+                int selectedCol = 0;
+
+                
+            }
+        }
+        */
         public void MakeLU()
         {
             if (IsSquare())
@@ -184,19 +204,23 @@ namespace Simple_Matrix_Calculator.RealMatrix
                             selectedCol = j;
                         }
                     }
-                    /*
+                    
+                    ///
+                    /// need to change in some way
+                    ///
+
                     if (tmp == 0)
                     {
-                        Console.WriteLine(U);
-                        Console.WriteLine();
+                        //Console.WriteLine(U);
+                        //Console.WriteLine();
                         for(int j = 0; j < Row; j++)
                         {
-                            Console.Write(permutation[j] + " ");
+                            //Console.Write(permutation[j] + " ");
                         }
-                        Console.WriteLine();
+                        //Console.WriteLine();
                         throw SingularMatrixException;
                     }
-                    */
+
                     inttmp = permutation[i];
                     permutation[i] = permutation[selectedCol];
                     permutation[selectedCol] = inttmp;
@@ -244,7 +268,12 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 {
                     return P;
                 }
+                if (!LUMade)
+                {
+                    MakeLU();
+                }
                 P = new Matrix(Row, Col, SpecialMatrix.Zero);
+                P.Lock = false;
                 for (int i = 0; i < Row; i++)
                 {
                     P[permutation[i], i] = 1;
@@ -401,6 +430,18 @@ namespace Simple_Matrix_Calculator.RealMatrix
                     throw new Exception("Cannot change locked matrix!");
                 }
                 mat[row, col] = value;
+            }
+        }
+
+        public RowVector ToRowVector()
+        {
+            if (Col == 1)
+            {
+                return new RowVector(mat.Clone() as double[,]);
+            }
+            else
+            {
+                return null;
             }
         }
 
