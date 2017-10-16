@@ -34,7 +34,7 @@ namespace Simple_Matrix_Calculator
                 ///
                 using (StreamReader sr = new StreamReader(FileName))
                 {
-                    string str = Console.ReadLine();
+                    string str = sr.ReadLine();
                     string[] split = str.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                     n = int.Parse(split[0]);
                     m = int.Parse(split[1]);
@@ -42,7 +42,7 @@ namespace Simple_Matrix_Calculator
                     correspondingValues = new RowVector(n);
                     for (int i = 0; i < n; i++)
                     {
-                        str = Console.ReadLine();
+                        str = sr.ReadLine();
                         split = str.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                         RowVector sample = new RowVector(m);
                         for(int j = 0; j < m; j++)
@@ -50,14 +50,14 @@ namespace Simple_Matrix_Calculator
                             sample[j] = int.Parse(split[j]);
                         }
                         samples.Add(sample);
-                        correspondingValues[i] = int.Parse(split[m - 1]);
+                        correspondingValues[i] = int.Parse(split[m]);
                     }
                 }
             }
             else
             {
-                n = 100;
-                m = 99;
+                n = 1000;
+                m = 999;
                 samples = new List<RowVector>(n);
                 correspondingValues = new RowVector(n, SpecialMatrix.Random);
 
