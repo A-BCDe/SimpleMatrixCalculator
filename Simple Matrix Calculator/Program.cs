@@ -14,6 +14,9 @@ namespace Simple_Matrix_Calculator
     {
         static void Main(string[] args)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Reset();
+            stopwatch.Start();
             ///
             /// Example : Gradient Descent
             ///
@@ -64,28 +67,30 @@ namespace Simple_Matrix_Calculator
                 for (int i = 0; i < n; i++)
                 {
                     samples.Add(new RowVector(m, SpecialMatrix.Random));
-                    /*
-                    samples[i][0] = 1;
-                    samples[i][1] = i & 1431655765;
-                    samples[i][2] = i / 2;
-                    */
                 }
             }
             samplesMatrix = new CoefficientMatrix(samples, true);
-
-            /*
-            foo(samplesMatrix);
-            foo(null);
-            foo(samplesMatrix.Transpose);
-            foo(null);
-            foo((samplesMatrix.Transpose * samplesMatrix));
-            foo(null);
-            foo((samplesMatrix.Transpose * samplesMatrix).Inverse);
-            foo(null);
-            foo((samplesMatrix.Transpose * samplesMatrix).Inverse * samplesMatrix.Transpose);
-            */
+            
             RowVector result = ((samplesMatrix.Transpose * samplesMatrix).Inverse * samplesMatrix.Transpose * correspondingValues).ToRowVector();
             Console.WriteLine(result);
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            
+            Matrix A = new Matrix(new double[,]
+            {
+                { 1, -1, -1, 0, 0, 0 },
+                { 0, 1, 0, -1, -1, 0 },
+                { 0, 0, 1, 1, 0, -1 },
+                { 0, 1, -2, 1, 0, 0 },
+                { 0, 0, 0, 1, -2, 1 },
+                { 0, 1, 0, 0, 2, 0 }
+            });
+            RowVector b = new RowVector(new double[]
+            {
+                0, 0, 0, 0, 0, 7
+            });
+            Console.WriteLine((A.Inverse * b).ToRowVector());
+            Console.WriteLine(A.SolveWith(b));
         }
         private static void foo(Matrix A)
         {
