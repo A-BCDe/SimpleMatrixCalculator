@@ -198,9 +198,9 @@ namespace Simple_Matrix_Calculator.RealMatrix
                     int inttmp;
                     for (int j = i; j < Row; j++)
                     {
-                        if (Abs(U[j, i]) > tmp)
+                        if (abs(U[j, i]) > tmp)
                         {
-                            tmp = Abs(U[j, i]);
+                            tmp = abs(U[j, i]);
                             selectedCol = j;
                         }
                     }
@@ -530,7 +530,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         #region inline functions
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private double Abs(double a)
+        private double abs(double a)
         {
             return a > 0 ? a : -a;
         }
@@ -549,7 +549,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             int row = A.Row;
             RowVector B = new RowVector(row);
-
+            b.Lock = false;
             for (int i = 0; i < row; i++)
             {
                 B[i] = b[i];
@@ -559,6 +559,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 }
                 B[i] /= A[i, i];
             }
+            b.Lock = true;
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -566,6 +567,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             int row = A.Row;
             RowVector B = new RowVector(row);
+            b.Lock = false;
 
             for (int i = row - 1; i > -1; i--)
             {
@@ -576,6 +578,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 }
                 B[i] /= A[i, i];
             }
+            b.Lock = true;
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -591,10 +594,12 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
 
             RowVector b = new RowVector(Row);
+            b.Lock = false;
             for (int i = 0; i < Row; i++)
             {
                 b[i] = v[permutation[i]];
             }
+            b.Lock = true;
 
             return SolveBack(U, SolveForth(L, b));
         }
@@ -605,6 +610,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             if (IsSameSize(A, B))
             {
                 Matrix C = new Matrix(A.Row, A.Col);
+                C.Lock = false;
                 for (int i = 0; i < A.Row; i++)
                 {
                     for (int j = 0; j < B.Row; j++)
@@ -612,6 +618,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                         C[i, j] = A[i, j] + B[i, j];
                     }
                 }
+                C.Lock = true;
                 return C;
             }
             else
@@ -625,6 +632,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             if (IsSameSize(A, B))
             {
                 Matrix C = new Matrix(A.Row, A.Col);
+                C.Lock = false;
                 for (int i = 0; i < A.Row; i++)
                 {
                     for (int j = 0; j < B.Row; j++)
@@ -632,6 +640,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                         C[i, j] = A[i, j] - B[i, j];
                     }
                 }
+                C.Lock = true;
                 return C;
             }
             else
@@ -680,6 +689,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Matrix Multiply(double a, Matrix B)
         {
+            B.Lock = false;
             Parallel.For(0, B.Row, i =>
             {
                 for (int j = 0; j < B.Col; j++)
@@ -687,11 +697,13 @@ namespace Simple_Matrix_Calculator.RealMatrix
                     B[i, j] *= a;
                 }
             });
+            B.Lock = true;
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Matrix Divide(double a, Matrix B)
         {
+            B.Lock = false;
             Parallel.For(0, B.Row, i =>
               {
                   for (int j = 0; j < B.Col; j++)
@@ -699,12 +711,14 @@ namespace Simple_Matrix_Calculator.RealMatrix
                       B[i, j] /= a;
                   }
               });
+            B.Lock = true;
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Matrix Negative(Matrix A)
         {
             Matrix B = A;
+            B.Lock = false;
             Parallel.For(0, A.Row, i =>
             {
                 for (int j = 0; j < A.Col; j++)
@@ -712,6 +726,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                     B[i, j] = -A[i, j];
                 }
             });
+            B.Lock = true;
             return B;
         }
     }
