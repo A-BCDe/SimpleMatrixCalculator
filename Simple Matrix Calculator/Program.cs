@@ -91,6 +91,16 @@ namespace Simple_Matrix_Calculator
             });
             Console.WriteLine((A.Inverse * b).ToRowVector());
             Console.WriteLine(A.SolveWith(b));
+
+            Matrix B = new Matrix(10, 10, SpecialMatrix.Random);
+            Matrix kernel = new Matrix(new double[3, 3] {
+                { 0, 1, 0 },
+                { 1, 0, 1 },
+                { 0, 1, 0 }
+            });
+            Matrix C = B.ConvolutionMatrix(kernel);
+            Console.WriteLine();
+            Console.WriteLine(C == null ? "null" : C.ToString());
         }
         private static void foo(Matrix A)
         {

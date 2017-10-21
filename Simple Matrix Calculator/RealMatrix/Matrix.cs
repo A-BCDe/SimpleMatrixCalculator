@@ -386,6 +386,34 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
 
+        public Matrix ConvolutionMatrix(Matrix kernel)
+        {
+            //Assuming kernels have even rows and columns
+            if (kernel.Row % 2 == 0 || kernel.Col % 2 == 0)
+            {
+                return null;
+            }
+            if (this.Row < kernel.Row || this.Col < kernel.Col)
+            {
+                return null;
+            }
+            Matrix A = new Matrix(this.Row - kernel.Row + 1, this.Col - kernel.Col + 1);
+            Parallel.For(0, A.Row, i =>
+            {
+                for (int j = 0; j < A.Col; j++)
+                {
+                    for (int k = 0; k < kernel.Row; k++)
+                    {
+                        for (int l = 0; l < kernel.Col; l++)
+                        {
+                            A[i, j] += mat[i + k, j + l] * kernel[k, l];
+                        }
+                    }
+                }
+            });
+            return A;
+        }
+
         public bool IsSquare()
         {
             return (Row == Col);
