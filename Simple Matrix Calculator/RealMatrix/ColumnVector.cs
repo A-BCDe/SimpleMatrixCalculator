@@ -6,46 +6,47 @@ using System.Threading.Tasks;
 
 namespace Simple_Matrix_Calculator.RealMatrix
 {
-    public class ColumnVector : Matrix
+    public class ColumnVector : Matrix // basically, Col = 1
     {
-        public ColumnVector(int col)
-            : base(1, col)
+        public ColumnVector(int row)
+            : base(row, 1)
         {
 
         }
         public ColumnVector(double[,] vector)
             : base(vector)
         {
-            if (vector.GetLength(0) != 1)
+            if(vector.GetLength(1) != 1)
             {
                 throw new Exception("Wrong vector input");
             }
         }
         public ColumnVector(double[] vector)
-            : base(1, vector.Length)
+            : base(vector.Length, 1)
         {
-            for (int i = 0; i < Col; i++)
+            for(int i = 0; i < Row; i++)
             {
                 mat[i, 0] = vector[i];
             }
         }
-        public ColumnVector(int col, SpecialMatrix specialMatrix)
-            : base(1, col, specialMatrix)
+        public ColumnVector(int row, SpecialMatrix specialMatrix)
+            : base(row, 1, specialMatrix)
         {
 
         }
 
-        public double this[int col]
+        public double this[int row]
         {
             get
             {
-                return mat[0, col];
+                return mat[row, 0];
             }
             set
             {
-                mat[0, col] = value;
+                mat[row, 0] = value;
             }
         }
+
         public new RowVector Transpose
         {
             get

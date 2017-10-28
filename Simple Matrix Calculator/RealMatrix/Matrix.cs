@@ -159,7 +159,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             if (IsSquare())
             {
                 L = new Matrix(Row, Col, SpecialMatrix.Identity);
-                U = mat;
+                U = mat.Clone() as double[,];
                 L.Lock = false;
                 U.Lock = false;
 
@@ -300,7 +300,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
 
                 Parallel.For(0, Row, i =>
                 {
-                     RowVector rowVector = new RowVector(Row);
+                     ColumnVector rowVector = new ColumnVector(Row);
                      rowVector[i] = 1;
                      I.SetCol(SolveWith(rowVector), i);
                 });
@@ -461,11 +461,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
 
-        public RowVector ToRowVector()
+        public ColumnVector ToRowVector()
         {
             if (Col == 1)
             {
-                return new RowVector(mat.Clone() as double[,]);
+                return new ColumnVector(mat.Clone() as double[,]);
             }
             else
             {
@@ -536,7 +536,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetCol(RowVector v, int k)
+        private void SetCol(ColumnVector v, int k)
         {
             for (int i = 0; i < Row; i++)
             {
@@ -545,10 +545,10 @@ namespace Simple_Matrix_Calculator.RealMatrix
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static RowVector SolveForth(Matrix A, RowVector b)
+        private static ColumnVector SolveForth(Matrix A, ColumnVector b)
         {
             int row = A.Row;
-            RowVector B = new RowVector(row);
+            ColumnVector B = new ColumnVector(row);
             b.Lock = false;
             for (int i = 0; i < row; i++)
             {
@@ -563,10 +563,10 @@ namespace Simple_Matrix_Calculator.RealMatrix
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static RowVector SolveBack(Matrix A, RowVector b)
+        private static ColumnVector SolveBack(Matrix A, ColumnVector b)
         {
             int row = A.Row;
-            RowVector B = new RowVector(row);
+            ColumnVector B = new ColumnVector(row);
             b.Lock = false;
 
             for (int i = row - 1; i > -1; i--)
@@ -582,7 +582,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             return B;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RowVector SolveWith(RowVector v)
+        public ColumnVector SolveWith(ColumnVector v)
         {
             if (Row != Col)
             {
@@ -593,7 +593,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 throw new Exception("Wrong number of results in solution vector!");
             }
 
-            RowVector b = new RowVector(Row);
+            ColumnVector b = new ColumnVector(Row);
             b.Lock = false;
             for (int i = 0; i < Row; i++)
             {

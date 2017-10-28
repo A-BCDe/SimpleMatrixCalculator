@@ -53,12 +53,12 @@
     <Compile Include="ComplexValueMatrix\ComplexRowVector.cs" />
     <Compile Include="Number\Complex.cs" />
     <Compile Include="RealMatrix\CoefficientMatrix.cs" />
-    <Compile Include="RealMatrix\CoulmnVector.cs" />
+    <Compile Include="RealMatrix\RowVector.cs" />
     <Compile Include="RealMatrix\Matrices.cs" />
     <Compile Include="RealMatrix\Matrix.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RealMatrix\RowVector.cs" />
+    <Compile Include="RealMatrix\ColumnVector.cs" />
     <Compile Include="Set\Set.cs" />
   </ItemGroup>
   <ItemGroup>

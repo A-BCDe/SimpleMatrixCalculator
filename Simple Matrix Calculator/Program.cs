@@ -20,8 +20,8 @@ namespace Simple_Matrix_Calculator
             ///
             /// Example : Gradient Descent
             ///
-            List<RowVector> samples;
-            RowVector correspondingValues;
+            List<ColumnVector> samples;
+            ColumnVector correspondingValues;
             CoefficientMatrix samplesMatrix;
             int n, m;
             string FileName = "test.txt";
@@ -38,16 +38,16 @@ namespace Simple_Matrix_Calculator
                 using (StreamReader sr = new StreamReader(FileName))
                 {
                     string str = sr.ReadLine();
-                    string[] split = str.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] split = str.Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
                     n = int.Parse(split[0]);
                     m = int.Parse(split[1]);
-                    samples = new List<RowVector>();
-                    correspondingValues = new RowVector(n);
+                    samples = new List<ColumnVector>();
+                    correspondingValues = new ColumnVector(n);
                     for (int i = 0; i < n; i++)
                     {
                         str = sr.ReadLine();
-                        split = str.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                        RowVector sample = new RowVector(m);
+                        split = str.Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                        ColumnVector sample = new ColumnVector(m);
                         for(int j = 0; j < m; j++)
                         {
                             sample[j] = int.Parse(split[j]);
@@ -61,21 +61,25 @@ namespace Simple_Matrix_Calculator
             {
                 n = 1000;
                 m = 999;
-                samples = new List<RowVector>(n);
-                correspondingValues = new RowVector(n, SpecialMatrix.Random);
+                samples = new List<ColumnVector>(n);
+                correspondingValues = new ColumnVector(n, SpecialMatrix.Random);
 
                 for (int i = 0; i < n; i++)
                 {
-                    samples.Add(new RowVector(m, SpecialMatrix.Random));
+                    samples.Add(new ColumnVector(m, SpecialMatrix.Random));
                 }
             }
             samplesMatrix = new CoefficientMatrix(samples, true);
-            
-            RowVector result = ((samplesMatrix.Transpose * samplesMatrix).Inverse * samplesMatrix.Transpose * correspondingValues).ToRowVector();
+
+            Console.WriteLine();
+            Console.WriteLine(samplesMatrix);
+            Console.WriteLine();
+
+            ColumnVector result = ((samplesMatrix.Transpose * samplesMatrix).Inverse * samplesMatrix.Transpose * correspondingValues).ToRowVector();
             Console.WriteLine(result);
             stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
-            
+            Console.ReadLine();
             Matrix A = new Matrix(new double[,]
             {
                 { 1, -1, -1, 0, 0, 0 },
@@ -85,7 +89,7 @@ namespace Simple_Matrix_Calculator
                 { 0, 0, 0, 1, -2, 1 },
                 { 0, 1, 0, 0, 2, 0 }
             });
-            RowVector b = new RowVector(new double[]
+            ColumnVector b = new ColumnVector(new double[]
             {
                 0,
                 0,

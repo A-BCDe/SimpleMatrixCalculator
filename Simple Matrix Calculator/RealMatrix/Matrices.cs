@@ -35,7 +35,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                   matrices[i] = mats[i];
               });
         }
-        public Matrices(List<Matrix> mats) // assuming all matrices are same size
+        public Matrices(List<Matrix> mats) // assuming all matrices have same size
         {
             Row = mats[0].Row;
             Col = mats[0].Col;
