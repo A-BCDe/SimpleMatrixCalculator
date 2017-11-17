@@ -174,6 +174,30 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
         */
+
+        private Matrix rref()
+        {
+            Matrix A = mat;
+            A.Lock = false;
+
+            for (int i = 0; i < Col; i++)
+            {
+                
+            }
+            return A;
+        }
+
+        public Matrix RREF()
+        {
+            return rref();
+        }
+
+        public Matrix RREF(ColumnVector b)
+        {
+            Matrix A = mat;
+            return A;
+        }
+
         public void MakeLU()
         {
             if (IsSquare())
@@ -478,6 +502,54 @@ namespace Simple_Matrix_Calculator.RealMatrix
             else return null;
         }
 
+        public Matrix RowMerge(Matrix B)
+        {
+            if (this.Col != B.Col)
+            {
+                return null;
+            }
+            Matrix A = new Matrix(Row + B.Row, Col);
+            for (int i = 0; i < Row; i++)
+            {
+                for(int j = 0; j < Col; j++)
+                {
+                    A[i, j] = mat[i, j];
+                }
+            }
+            for (int i = 0; i < B.Row; i++)
+            {
+                for (int j = 0; j < Col; j++)
+                {
+                    A[i + Row, j] = B[i, j];
+                }
+            }
+            A.Lock = true;
+            return A;
+        }
+        public Matrix ColumnMerge(Matrix B)
+        {
+            if (this.Row != B.Row)
+            {
+                return null;
+            }
+            Matrix A = new Matrix(Row, Col + B.Col);
+            for (int i = 0; i < Row; i++)
+            {
+                for (int j = 0; j < Col; j++)
+                {
+                    A[i, j] = mat[i, j];
+                }
+            }
+            for (int i = 0; i < B.Row; i++)
+            {
+                for (int j = 0; j < B.Col; j++)
+                {
+                    A[i, j + Col] = B[i, j];
+                }
+            }
+            A.Lock = true;
+            return A;
+        }
         #region Operator
 
         public static implicit operator Matrix(double[,] matrix)

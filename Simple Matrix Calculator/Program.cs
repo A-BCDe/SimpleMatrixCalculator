@@ -110,6 +110,17 @@ namespace Simple_Matrix_Calculator
             Matrix C = B.ConvolutionMatrix(kernel);
             Console.WriteLine();
             Console.WriteLine(C == null ? "null" : C.ToString());
+
+            Matrix D = new Matrix(4, 4, SpecialMatrix.Random);
+            Matrix E = new Matrix(5, 4, SpecialMatrix.Random);
+            Matrix F = D.RowMerge(E);
+            Matrix G = new Matrix(4, 5, SpecialMatrix.Random);
+            Matrix H = D.ColumnMerge(G);
+            Console.WriteLine(D);
+            Console.WriteLine(E);
+            Console.WriteLine(F == null ? "null" : F.ToString());
+            Console.WriteLine(G);
+            Console.WriteLine(H == null ? "null" : H.ToString());
         }
         private static void foo(Matrix A)
         {
