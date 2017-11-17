@@ -75,7 +75,7 @@ namespace Simple_Matrix_Calculator
             Console.WriteLine(samplesMatrix);
             Console.WriteLine();
 
-            ColumnVector result = ((samplesMatrix.Transpose * samplesMatrix).Inverse * samplesMatrix.Transpose * correspondingValues).ToRowVector();
+            ColumnVector result = ((samplesMatrix.Transpose * samplesMatrix).Inverse * samplesMatrix.Transpose * correspondingValues).ToColumnVector();
             Console.WriteLine(result);
             stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
@@ -98,7 +98,7 @@ namespace Simple_Matrix_Calculator
                 0,
                 7
             });
-            Console.WriteLine((A.Inverse * b).ToRowVector());
+            Console.WriteLine((A.Inverse * b).ToColumnVector());
             Console.WriteLine(A.SolveWith(b));
 
             Matrix B = new Matrix(10, 10, SpecialMatrix.Random);

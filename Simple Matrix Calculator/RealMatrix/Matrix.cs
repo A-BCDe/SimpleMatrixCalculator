@@ -461,16 +461,21 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
 
-        public ColumnVector ToRowVector()
+        public ColumnVector ToColumnVector()
         {
             if (Col == 1)
             {
                 return new ColumnVector(mat.Clone() as double[,]);
             }
-            else
+            else return null;
+        }
+        public RowVector ToRowVector()
+        {
+            if (Row == 1)
             {
-                return null;
+                return new RowVector(mat.Clone() as double[,]);
             }
+            else return null;
         }
 
         #region Operator
