@@ -12,3 +12,4 @@ D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\S
 D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\obj\Release\Simple Matrix Calculator.csprojResolveAssemblyReference.cache
 D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\obj\Release\Simple Matrix Calculator.exe
 D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\obj\Release\Simple Matrix Calculator.pdb
+D:\Visual Studio 2017 Projects\Simple Matrix Calculator\SimpleMatrixCalculator\Simple Matrix Calculator\obj\Release\Simple Matrix Calculator.csproj.CoreCompileInputs.cache

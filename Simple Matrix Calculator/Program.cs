@@ -14,12 +14,11 @@ namespace Simple_Matrix_Calculator
     {
         static void Main(string[] args)
         {
+            /*
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Reset();
             stopwatch.Start();
-            ///
-            /// Example : Gradient Descent
-            ///
+
             List<ColumnVector> samples;
             ColumnVector correspondingValues;
             CoefficientMatrix samplesMatrix;
@@ -121,6 +120,9 @@ namespace Simple_Matrix_Calculator
             Console.WriteLine(F == null ? "null" : F.ToString());
             Console.WriteLine(G);
             Console.WriteLine(H == null ? "null" : H.ToString());
+            */
+            Matrix I = new Matrix(1000, 3, SpecialMatrix.Random);
+            foo(I.RREF());
         }
         private static void foo(Matrix A)
         {

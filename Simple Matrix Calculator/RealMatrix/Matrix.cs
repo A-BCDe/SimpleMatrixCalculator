@@ -48,7 +48,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         private Matrix I;
         private bool IMade;
 
-        
+
 
         private int[] permutation;
         private int permutationDeterminant = 1;
@@ -75,9 +75,9 @@ namespace Simple_Matrix_Calculator.RealMatrix
             switch (specialMatrix)
             {
                 case SpecialMatrix.Zero:
-                    for(int i = 0; i < row; i++)
+                    for (int i = 0; i < row; i++)
                     {
-                        for(int j = 0; j < col; j++)
+                        for (int j = 0; j < col; j++)
                         {
                             mat[i, j] = 0;
                         }
@@ -117,9 +117,9 @@ namespace Simple_Matrix_Calculator.RealMatrix
 
                 case SpecialMatrix.Random:
                     Random rand = new Random((int)DateTime.Now.Ticks);
-                    for(int i = 0; i < row; i++)
+                    for (int i = 0; i < row; i++)
                     {
-                        for(int j = 0; j < col; j++)
+                        for (int j = 0; j < col; j++)
                         {
                             mat[i, j] = rand.NextDouble();
                         }
@@ -136,7 +136,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             get
             {
-                if(Lock == true && TMade == true)
+                if (Lock == true && TMade == true)
                 {
                     return T;
                 }
@@ -179,23 +179,42 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             Matrix A = mat;
             A.Lock = false;
+            int row = 0;
 
-            for (int i = 0; i < Col; i++)
+            for (int i = 0; i < Col && row < Row; i++)
             {
-                
+                for (int j = row; j < Row; j++)
+                {
+                    if(A[j, i] != 0)
+                    {
+                        RowOperation_Swap(j, row, ref A);
+                        RowOperation_Divide(row, A[row, i], ref A);
+                        for(int k = 0; k < Row; k++)
+                        {
+                            if (k == row || A[k, i] == 0)
+                            {
+                                continue;
+                            }
+                            RowOperation_Add(k, row, -A[k, i] / A[row, i], ref A);
+                        }
+                    }
+                }
+                row++;
             }
+            A.Lock = true;
             return A;
         }
 
         public Matrix RREF()
         {
-            return rref();
+            return this.rref();
         }
 
         public Matrix RREF(ColumnVector b)
         {
             Matrix A = mat;
-            return A;
+            A.ColumnMerge(b);
+            return A.rref();
         }
 
         public void MakeLU()
@@ -228,7 +247,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                             selectedCol = j;
                         }
                     }
-                    
+
                     ///
                     /// need to change in some way
                     ///
@@ -237,7 +256,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                     {
                         //Console.WriteLine(U);
                         //Console.WriteLine();
-                        for(int j = 0; j < Row; j++)
+                        for (int j = 0; j < Row; j++)
                         {
                             //Console.Write(permutation[j] + " ");
                         }
@@ -288,7 +307,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             get
             {
-                if(Lock == true && PMade == true)
+                if (Lock == true && PMade == true)
                 {
                     return P;
                 }
@@ -312,11 +331,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             get
             {
-                if(Lock == true && IMade == true)
+                if (Lock == true && IMade == true)
                 {
                     return I;
                 }
-                if(!LUMade)
+                if (!LUMade)
                 {
                     MakeLU();
                 }
@@ -324,9 +343,9 @@ namespace Simple_Matrix_Calculator.RealMatrix
 
                 Parallel.For(0, Row, i =>
                 {
-                     ColumnVector rowVector = new ColumnVector(Row);
-                     rowVector[i] = 1;
-                     I.SetCol(SolveWith(rowVector), i);
+                    ColumnVector rowVector = new ColumnVector(Row);
+                    rowVector[i] = 1;
+                    I.SetCol(SolveWith(rowVector), i);
                 });
                 IMade = true;
                 I.Lock = true;
@@ -338,11 +357,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             get
             {
-                if(Lock == true && detMade == true)
+                if (Lock == true && detMade == true)
                 {
                     return det;
                 }
-                if(!LUMade)
+                if (!LUMade)
                 {
                     MakeLU();
                 }
@@ -359,14 +378,14 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             get
             {
-                if(Lock == true && trMade == true)
+                if (Lock == true && trMade == true)
                 {
                     return tr;
                 }
                 if (IsSquare())
                 {
                     tr = 0;
-                    for(int i = 0; i < Row; i++)
+                    for (int i = 0; i < Row; i++)
                     {
                         tr += mat[i, i];
                     }
@@ -383,11 +402,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             get
             {
-                if(Lock == true && LUMade == true)
+                if (Lock == true && LUMade == true)
                 {
                     return L;
                 }
-                if(!LUMade)
+                if (!LUMade)
                 {
                     MakeLU();
                 }
@@ -477,7 +496,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
             set
             {
-                if(Lock)
+                if (Lock)
                 {
                     throw new Exception("Cannot change locked matrix!");
                 }
@@ -511,7 +530,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             Matrix A = new Matrix(Row + B.Row, Col);
             for (int i = 0; i < Row; i++)
             {
-                for(int j = 0; j < Col; j++)
+                for (int j = 0; j < Col; j++)
                 {
                     A[i, j] = mat[i, j];
                 }
@@ -556,40 +575,40 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             return new Matrix((double[,])matrix.Clone());
         }
-        public static implicit operator double[,](Matrix matrix)
+        public static implicit operator double[,] (Matrix matrix)
         {
             return (double[,])matrix.mat.Clone();
         }
-        public static Matrix operator + (Matrix A, Matrix B)
+        public static Matrix operator +(Matrix A, Matrix B)
         {
             return Add(A, B);
         }
-        public static Matrix operator - (Matrix A, Matrix B)
+        public static Matrix operator -(Matrix A, Matrix B)
         {
             return Subtract(A, B);
         }
-        public static Matrix operator * (Matrix A, Matrix B)
+        public static Matrix operator *(Matrix A, Matrix B)
         {
             return SimpleMultiply(A, B);
         }
-        public static Matrix operator * (double a, Matrix B)
+        public static Matrix operator *(double a, Matrix B)
         {
             return Multiply(a, B);
         }
-        public static Matrix operator * (Matrix A, double b)
+        public static Matrix operator *(Matrix A, double b)
         {
             return Multiply(b, A);
         }
-        public static Matrix operator / (Matrix A, double b)
+        public static Matrix operator /(Matrix A, double b)
         {
             return Divide(b, A);
         }
-        public static Matrix operator - (Matrix A)
+        public static Matrix operator -(Matrix A)
         {
             return Negative(A);
         }
 
-#endregion
+        #endregion
 
         #region Exceptions
 
@@ -806,11 +825,56 @@ namespace Simple_Matrix_Calculator.RealMatrix
             B.Lock = true;
             return B;
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void RowOperation_Swap(int a, int b, ref Matrix A) // swap row a and b
+        {
+            if (a == b)
+            {
+                return;
+            }
+            for (int i = 0; i < A.Col; i++)
+            {
+                double tmp = A[a, i];
+                A[a, i] = A[b, i];
+                A[b, i] = tmp;
+            }
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void RowOperation_Add(int a, int b, double c, ref Matrix A) // Add row b to row a
+        {
+            if (a == b)
+            {
+                throw new Exception("a should not be b");
+            }
+            for (int i = 0; i < A.Col; i++)
+            {
+                A[a, i] += A[b, i] * c;
+            }
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void RowOperation_Multiply(int a, double b, ref Matrix A) // multiply row a with b
+        {
+            for (int i = 0; i < A.Col; i++)
+            {
+                A[a, i] *= b;
+            }
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void RowOperation_Divide(int a, double b, ref Matrix A) // divide row a with b
+        {
+            for (int i = 0; i < A.Col; i++)
+            {
+                A[a, i] /= b;
+            }
+        }
+        #endregion
     }
-    #endregion
-    
+
     public enum SpecialMatrix
     {
-        Zero, One, Identity, Random
+        Zero,
+        One,
+        Identity,
+        Random
     }
 }
