@@ -28,9 +28,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 TMade = false;
                 PMade = false;
                 IMade = false;
+                RankMade = false;
                 _lock = value;
             }
         } // choose whether the matrix is changable or not
+
 
         private double det;
         private bool detMade;
@@ -48,7 +50,19 @@ namespace Simple_Matrix_Calculator.RealMatrix
         private Matrix I;
         private bool IMade;
 
-
+        private int rank;
+        private bool RankMade;
+        public int Rank
+        {
+            get
+            {
+                if (RankMade)
+                {
+                    return rank;
+                }
+                else return MakeRank();
+            }
+        }
 
         private int[] permutation;
         private int permutationDeterminant = 1;
@@ -175,27 +189,68 @@ namespace Simple_Matrix_Calculator.RealMatrix
         }
         */
 
-        private Matrix rref()
+        private Matrix Rref()
         {
             Matrix A = mat;
             A.Lock = false;
             int row = 0;
 
-            for (int i = 0; i < Col && row < Row; i++)
+            for (int j = 0; j < Col && row < Row; j++)
             {
-                for (int j = row; j < Row; j++)
+                for (int i = row; i < Row; i++)
                 {
-                    if(A[j, i] != 0)
+                    if(A[i, j] != 0)
                     {
-                        RowOperation_Swap(j, row, ref A);
-                        RowOperation_Divide(row, A[row, i], ref A);
+                        RowOperation_Swap(i, row, ref A);
+                        RowOperation_Divide(row, A[row, j], ref A);
                         for(int k = 0; k < Row; k++)
                         {
-                            if (k == row || A[k, i] == 0)
+                            if (k == row || A[k, j] == 0)
                             {
                                 continue;
                             }
-                            RowOperation_Add(k, row, -A[k, i] / A[row, i], ref A);
+                            RowOperation_Add(k, row, -A[k, j], ref A);
+                        }
+                        break;
+                    }
+                }
+                row++;
+            }
+            A.Lock = true;
+            return A;
+        }
+        public Matrix RREF()
+        {
+            return this.Rref();
+        }
+        public Matrix RREF(ColumnVector b)
+        {
+            Matrix A = mat;
+            A.ColumnMerge(b);
+            return A.Rref();
+        }
+
+        private Matrix Ref()
+        {
+            Matrix A = mat;
+            A.Lock = false;
+            int row = 0;
+
+            for (int j = 0; j < Col && row < Row; j++)
+            {
+                for (int i = row; i < Row; i++)
+                {
+                    if (A[i, j] != 0)
+                    {
+                        RowOperation_Swap(i, row, ref A);
+                        RowOperation_Divide(row, A[row, j], ref A);
+                        for (int k = row + 1; k < Row; k++)
+                        {
+                            if (A[k, j] == 0)
+                            {
+                                continue;
+                            }
+                            RowOperation_Add(k, row, -A[k, j], ref A);
                         }
                     }
                 }
@@ -204,17 +259,20 @@ namespace Simple_Matrix_Calculator.RealMatrix
             A.Lock = true;
             return A;
         }
-
-        public Matrix RREF()
+        public Matrix REF()
         {
-            return this.rref();
+            return this.Ref();
         }
-
-        public Matrix RREF(ColumnVector b)
+        public Matrix REF(ColumnVector b)
         {
             Matrix A = mat;
             A.ColumnMerge(b);
-            return A.rref();
+            return A.Ref();
+        }
+
+        private int MakeRank()
+        {
+            throw new NotImplementedException();
         }
 
         public void MakeLU()

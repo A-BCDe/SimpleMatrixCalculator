@@ -14,10 +14,18 @@ namespace Simple_Matrix_Calculator
     {
         static void Main(string[] args)
         {
-            /*
             Stopwatch stopwatch = new Stopwatch();
+            Matrix I = new Matrix(/*new double[,] {
+                {1,1,1,1 },
+                {1,0,1,0 },
+                {0,0,1,1 },
+                {1,0,1,0 }
+            }*/
+            4, 4, SpecialMatrix.Random);
+            foo(I);
             stopwatch.Reset();
             stopwatch.Start();
+            /*
 
             List<ColumnVector> samples;
             ColumnVector correspondingValues;
@@ -121,8 +129,14 @@ namespace Simple_Matrix_Calculator
             Console.WriteLine(G);
             Console.WriteLine(H == null ? "null" : H.ToString());
             */
-            Matrix I = new Matrix(1000, 3, SpecialMatrix.Random);
             foo(I.RREF());
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            stopwatch.Reset();
+            stopwatch.Start();
+            foo(I.REF());
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
         }
         private static void foo(Matrix A)
         {
