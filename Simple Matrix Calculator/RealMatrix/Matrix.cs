@@ -565,6 +565,10 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
             return s;
         }
+        public Matrix Clone()
+        {
+            return new Matrix(mat.Clone() as double[,]);
+        }
 
         public double this[int row, int col]
         {
@@ -647,6 +651,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
             A.Lock = true;
             return A;
         }
+
         #region Operator
 
         public static implicit operator Matrix(double[,] matrix)

@@ -133,7 +133,10 @@ namespace Simple_Matrix_Calculator
             stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
             Console.WriteLine(I.Rank);
-            ColumnVector J = new ColumnVector(10, SpecialMatrix.Random);
+            ColumnVector J = new ColumnVector(new double[]
+            {
+                -2, 2, 2
+            });
             Console.WriteLine(J.HouseholderMatrix);
         }
         private static void foo(Matrix A)

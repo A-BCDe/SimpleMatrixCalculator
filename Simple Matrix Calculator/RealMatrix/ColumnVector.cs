@@ -82,6 +82,11 @@ namespace Simple_Matrix_Calculator.RealMatrix
             }
         }
 
+        public new ColumnVector Clone()
+        {
+            return new ColumnVector(mat.Clone() as double[,]);
+        }
+
         public double LengthSquare
         {
             get
@@ -129,7 +134,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 {
                     return H;
                 }
-                return H = new Matrix(this.Row, this.Row, SpecialMatrix.Identity) - 2 * this * this.Transpose / this.LengthSquare;
+                return H = new Matrix(this.Row, this.Row, SpecialMatrix.Identity) - 2 * this.Clone() * this.Transpose / this.LengthSquare;
             }
         }
     }
