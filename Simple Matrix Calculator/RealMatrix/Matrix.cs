@@ -28,6 +28,8 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 TMade = false;
                 PMade = false;
                 IMade = false;
+                RREFMade = false;
+                REFMade = false;
                 RankMade = false;
                 _lock = value;
             }
@@ -50,6 +52,10 @@ namespace Simple_Matrix_Calculator.RealMatrix
         private Matrix I;
         private bool IMade;
 
+        private Matrix ReducedRowEchelonForm;
+        private bool RREFMade;
+        private Matrix RowEchelonForm;
+        private bool REFMade;
         private int rank;
         private bool RankMade;
         public int Rank
@@ -191,33 +197,40 @@ namespace Simple_Matrix_Calculator.RealMatrix
 
         private Matrix Rref()
         {
-            Matrix A = mat;
-            A.Lock = false;
+            if (RREFMade)
+            {
+                return ReducedRowEchelonForm;
+            }
+            ReducedRowEchelonForm = mat;
+            ReducedRowEchelonForm.Lock = false;
             int row = 0;
 
             for (int j = 0; j < Col && row < Row; j++)
             {
                 for (int i = row; i < Row; i++)
                 {
-                    if(A[i, j] != 0)
+                    if(ReducedRowEchelonForm[i, j] != 0)
                     {
-                        RowOperation_Swap(i, row, ref A);
-                        RowOperation_Divide(row, A[row, j], ref A);
+                        RowOperation_Swap(i, row, ref ReducedRowEchelonForm);
+                        RowOperation_Divide(row, ReducedRowEchelonForm[row, j], ref ReducedRowEchelonForm);
                         for(int k = 0; k < Row; k++)
                         {
-                            if (k == row || A[k, j] == 0)
+                            if (k == row || ReducedRowEchelonForm[k, j] == 0)
                             {
                                 continue;
                             }
-                            RowOperation_Add(k, row, -A[k, j], ref A);
+                            RowOperation_Add(k, row, -ReducedRowEchelonForm[k, j], ref ReducedRowEchelonForm);
                         }
                         break;
                     }
                 }
                 row++;
             }
-            A.Lock = true;
-            return A;
+            ReducedRowEchelonForm.Lock = true;
+            rank = row;
+            RankMade = true;
+            RREFMade = true;
+            return ReducedRowEchelonForm;
         }
         public Matrix RREF()
         {
@@ -232,32 +245,39 @@ namespace Simple_Matrix_Calculator.RealMatrix
 
         private Matrix Ref()
         {
-            Matrix A = mat;
-            A.Lock = false;
+            if (REFMade)
+            {
+                return RowEchelonForm;
+            }
+            RowEchelonForm = mat;
+            RowEchelonForm.Lock = false;
             int row = 0;
 
             for (int j = 0; j < Col && row < Row; j++)
             {
                 for (int i = row; i < Row; i++)
                 {
-                    if (A[i, j] != 0)
+                    if (RowEchelonForm[i, j] != 0)
                     {
-                        RowOperation_Swap(i, row, ref A);
-                        RowOperation_Divide(row, A[row, j], ref A);
+                        RowOperation_Swap(i, row, ref RowEchelonForm);
+                        RowOperation_Divide(row, RowEchelonForm[row, j], ref RowEchelonForm);
                         for (int k = row + 1; k < Row; k++)
                         {
-                            if (A[k, j] == 0)
+                            if (RowEchelonForm[k, j] == 0)
                             {
                                 continue;
                             }
-                            RowOperation_Add(k, row, -A[k, j], ref A);
+                            RowOperation_Add(k, row, -RowEchelonForm[k, j], ref RowEchelonForm);
                         }
                     }
                 }
                 row++;
             }
-            A.Lock = true;
-            return A;
+            RowEchelonForm.Lock = true;
+            rank = row;
+            RankMade = true;
+            REFMade = true;
+            return RowEchelonForm;
         }
         public Matrix REF()
         {
