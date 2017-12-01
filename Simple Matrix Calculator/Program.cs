@@ -15,7 +15,11 @@ namespace Simple_Matrix_Calculator
         static void Main(string[] args)
         {
             Stopwatch stopwatch = new Stopwatch();
-            Matrix I = new Matrix(10, 10, SpecialMatrix.Random);
+            Matrix I = new Matrix(new double[,]{
+                { 1, 0, 1 },
+                { 0, 1, 1 },
+                { 1, 1, 2 }
+            });
             //foo(I);
             stopwatch.Reset();
             stopwatch.Start();
@@ -141,7 +145,7 @@ namespace Simple_Matrix_Calculator
         }
         private static void foo(Matrix A)
         {
-            //Console.WriteLine(A);
+            Console.WriteLine(A);
             return;
         }
     }

@@ -227,7 +227,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 row++;
             }
             ReducedRowEchelonForm.Lock = true;
-            rank = row;
+            rank = row; // problem
             RankMade = true;
             RREFMade = true;
             return ReducedRowEchelonForm;
@@ -274,7 +274,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 row++;
             }
             RowEchelonForm.Lock = true;
-            rank = row;
+            rank = row; // problem
             RankMade = true;
             REFMade = true;
             return RowEchelonForm;
