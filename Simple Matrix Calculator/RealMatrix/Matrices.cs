@@ -13,18 +13,21 @@ namespace Simple_Matrix_Calculator.RealMatrix
         public int Col;
 
         private Matrix expectedValue;
+        private bool expectedValueMade;
 
         public Matrices(int row, int col)
         {
             matrices = new List<Matrix>();
             Row = row;
             Col = col;
+            expectedValueMade = false;
         }
         public Matrices(int row, int col, int size)
         {
             matrices = new List<Matrix>(size);
             Row = row;
             Col = col;
+            expectedValueMade = false;
         }
         public Matrices(Matrix[] mats) // assuming all matrices are same size
         {
@@ -34,12 +37,14 @@ namespace Simple_Matrix_Calculator.RealMatrix
               {
                   matrices[i] = mats[i];
               });
+            expectedValueMade = false;
         }
         public Matrices(List<Matrix> mats) // assuming all matrices have same size
         {
             Row = mats[0].Row;
             Col = mats[0].Col;
             matrices = mats;
+            expectedValueMade = false;
         }
 
         public void AddMatrix(Matrix mat)

@@ -14,6 +14,7 @@ namespace Simple_Matrix_Calculator
     {
         static void Main(string[] args)
         {
+            /*
             Stopwatch stopwatch = new Stopwatch();
             Matrix I = new Matrix(new double[,]{
                 { 1, 0, 1 },
@@ -23,7 +24,6 @@ namespace Simple_Matrix_Calculator
             //foo(I);
             stopwatch.Reset();
             stopwatch.Start();
-            /*
 
             List<ColumnVector> samples;
             ColumnVector correspondingValues;
@@ -126,7 +126,6 @@ namespace Simple_Matrix_Calculator
             Console.WriteLine(F == null ? "null" : F.ToString());
             Console.WriteLine(G);
             Console.WriteLine(H == null ? "null" : H.ToString());
-            */
             foo(I.RREF());
             stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
@@ -142,10 +141,88 @@ namespace Simple_Matrix_Calculator
                 -2, 2, 2
             });
             Console.WriteLine(J.HouseholderMatrix);
+            */
+            /*
+            List<ColumnVector> input;
+            ColumnVector output;
+
+            int n, m;
+            string FileName = "test.txt";
+            ///
+            /// File Name : test.txt
+            /// n m
+            /// x11 x12 ... x1m y1
+            /// x21 x22 ... x2m y2
+            /// ..................
+            /// xn1 xn2 ... xnm yn
+            ///
+            using (StreamReader sr = new StreamReader(FileName))
+            {
+                string str = sr.ReadLine();
+                string[] split = str.Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                n = int.Parse(split[0]);
+                m = int.Parse(split[1]);
+                input = new List<ColumnVector>();
+                output = new ColumnVector(n);
+                for (int i = 0; i < n; i++)
+                {
+                    str = sr.ReadLine();
+                    split = str.Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                    ColumnVector sample = new ColumnVector(m);
+                    for (int j = 0; j < m; j++)
+                    {
+                        sample[j] = int.Parse(split[j]);
+                    }
+                    input.Add(sample);
+                    output[i] = int.Parse(split[m]);
+                }
+            }
+
+            // double alpha = 0.1;
+            // ColumnVector theta_batch = new ColumnVector(n, SpecialMatrix.One);
+            int hiddenLayer = 3;
+            List<Matrix> WeightMatrix = new List<Matrix>(hiddenLayer + 1);
+            WeightMatrix[0] = new Matrix(m, n + 1);
+            for (int i = 1; i < hiddenLayer; i++)
+            {
+                WeightMatrix[i] = new Matrix(n + 1, n + 1);
+            }
+            WeightMatrix[hiddenLayer] = new Matrix(n + 1, 1);
+            */
+            /*
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Reset();
+            stopwatch.Start();
+            RowVector v = new RowVector(new double[]
+            {
+                0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+            });
+            foo(v.HouseholderMatrix);
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            stopwatch.Reset();
+            stopwatch.Start();
+            ColumnVector u = new ColumnVector(new double[]
+             {
+                0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+             });
+            foo(v.HouseholderMatrix);
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            */
+            Matrix A = new Matrix(new double[,]
+            {
+                {1,2,3 },
+            });
+            Matrix B = new Matrix(new double[,]
+            {
+                {4,3,2 },
+            });
+            Console.WriteLine(B - A);
         }
         private static void foo(Matrix A)
         {
-            Console.WriteLine(A);
+            // Console.WriteLine(A);
             return;
         }
     }

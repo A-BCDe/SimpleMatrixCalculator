@@ -71,7 +71,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
         {
             get
             {
-                ColumnVector vector = new ColumnVector(this.Row);
+                ColumnVector vector = new ColumnVector(this.Col);
                 for (int i = 0; i < Col; i++)
                 {
                     vector[i] = mat[i, 0];
@@ -137,7 +137,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                     return H;
                 }
                 HMade = true;
-                return H = new Matrix(this.Col, this.Col, SpecialMatrix.Identity) - 2 * this.Transpose * this.Clone() / this.LengthSquare;
+                return H = new Matrix(this.Col, this.Col, SpecialMatrix.Identity) - 2 * this.GrammMatrix / this.LengthSquare;
             }
         }
     }

@@ -31,6 +31,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 RREFMade = false;
                 REFMade = false;
                 RankMade = false;
+                GMade = false;
                 _lock = value;
             }
         } // choose whether the matrix is changable or not
@@ -58,6 +59,10 @@ namespace Simple_Matrix_Calculator.RealMatrix
         private bool REFMade;
         private int rank;
         private bool RankMade;
+
+        private Matrix G;
+        private bool GMade;
+
         public int Rank
         {
             get
@@ -535,6 +540,40 @@ namespace Simple_Matrix_Calculator.RealMatrix
             return A;
         }
 
+        public Matrix GrammMatrix
+        {
+            get
+            {
+                if (GMade)
+                {
+                    return G;
+                }
+                else
+                {
+                    G = new Matrix(Col, Col);
+                    for(int i = 0; i < Col; i++)
+                    {
+                        double sum;
+                        for (int j = 0; j < i; j++)
+                        {
+                            sum = 0;
+                            for(int k = 0; k < Row; k++)
+                            {
+                                sum += mat[k, i] * mat[k, j];
+                            }
+                            G[i, j] = G[j, i] = sum;
+                        }
+                        for(int k = 0; k < Row; k++)
+                        {
+                            G[i, i] += mat[k, i] * mat[k, i];
+                        }
+                    }
+                    GMade = true;
+                    return G;
+                }
+            }
+        }
+
         public bool IsSquare()
         {
             return (Row == Col);
@@ -550,6 +589,14 @@ namespace Simple_Matrix_Calculator.RealMatrix
         public static bool IsMultipliable(Matrix A, Matrix B)
         {
             return (A.Col == B.Row);
+        }
+        public bool IsFullRowRank()
+        {
+            return Rank == Col;
+        }
+        public bool IsFullColRank()
+        {
+            return Rank == Row;
         }
 
         public override string ToString()
@@ -603,53 +650,14 @@ namespace Simple_Matrix_Calculator.RealMatrix
             else return null;
         }
 
-        public Matrix RowMerge(Matrix B)
+
+        public Matrix RowMerge(Matrix A, Matrix B)
         {
-            if (this.Col != B.Col)
-            {
-                return null;
-            }
-            Matrix A = new Matrix(Row + B.Row, Col);
-            for (int i = 0; i < Row; i++)
-            {
-                for (int j = 0; j < Col; j++)
-                {
-                    A[i, j] = mat[i, j];
-                }
-            }
-            for (int i = 0; i < B.Row; i++)
-            {
-                for (int j = 0; j < Col; j++)
-                {
-                    A[i + Row, j] = B[i, j];
-                }
-            }
-            A.Lock = true;
-            return A;
+            return A.Clone().RowMerge(B);
         }
-        public Matrix ColumnMerge(Matrix B)
+        public Matrix ColumnMerge(Matrix A, Matrix B)
         {
-            if (this.Row != B.Row)
-            {
-                return null;
-            }
-            Matrix A = new Matrix(Row, Col + B.Col);
-            for (int i = 0; i < Row; i++)
-            {
-                for (int j = 0; j < Col; j++)
-                {
-                    A[i, j] = mat[i, j];
-                }
-            }
-            for (int i = 0; i < B.Row; i++)
-            {
-                for (int j = 0; j < B.Col; j++)
-                {
-                    A[i, j + Col] = B[i, j];
-                }
-            }
-            A.Lock = true;
-            return A;
+            return A.Clone().ColumnMerge(B);
         }
 
         #region Operator
@@ -792,7 +800,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 C.Lock = false;
                 for (int i = 0; i < A.Row; i++)
                 {
-                    for (int j = 0; j < B.Row; j++)
+                    for (int j = 0; j < B.Col; j++)
                     {
                         C[i, j] = A[i, j] + B[i, j];
                     }
@@ -814,7 +822,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 C.Lock = false;
                 for (int i = 0; i < A.Row; i++)
                 {
-                    for (int j = 0; j < B.Row; j++)
+                    for (int j = 0; j < B.Col; j++)
                     {
                         C[i, j] = A[i, j] - B[i, j];
                     }
@@ -950,6 +958,57 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 A[a, i] /= b;
             }
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Matrix RowMerge(Matrix B)
+        {
+            if (this.Col != B.Col)
+            {
+                return null;
+            }
+            Matrix A = new Matrix(Row + B.Row, Col);
+            for (int i = 0; i < Row; i++)
+            {
+                for (int j = 0; j < Col; j++)
+                {
+                    A[i, j] = mat[i, j];
+                }
+            }
+            for (int i = 0; i < B.Row; i++)
+            {
+                for (int j = 0; j < Col; j++)
+                {
+                    A[i + Row, j] = B[i, j];
+                }
+            }
+            A.Lock = true;
+            return A;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Matrix ColumnMerge(Matrix B)
+        {
+            if (this.Row != B.Row)
+            {
+                return null;
+            }
+            Matrix A = new Matrix(Row, Col + B.Col);
+            for (int i = 0; i < Row; i++)
+            {
+                for (int j = 0; j < Col; j++)
+                {
+                    A[i, j] = mat[i, j];
+                }
+            }
+            for (int i = 0; i < B.Row; i++)
+            {
+                for (int j = 0; j < B.Col; j++)
+                {
+                    A[i, j + Col] = B[i, j];
+                }
+            }
+            A.Lock = true;
+            return A;
+        }
+
         #endregion
     }
 

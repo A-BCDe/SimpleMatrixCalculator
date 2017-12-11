@@ -122,6 +122,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 {
                     return unit;
                 }
+                unitMade = true;
                 return unit = (ToColumnVector() / Length).ToColumnVector();
             }
         }
@@ -134,7 +135,7 @@ namespace Simple_Matrix_Calculator.RealMatrix
                 {
                     return H;
                 }
-                return H = new Matrix(this.Row, this.Row, SpecialMatrix.Identity) - 2 * this.Clone() * this.Transpose / this.LengthSquare;
+                return H = new Matrix(this.Row, this.Row, SpecialMatrix.Identity) - 2 * this.Transpose.GrammMatrix / this.LengthSquare;
             }
         }
     }
